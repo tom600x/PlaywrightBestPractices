@@ -1,0 +1,24 @@
+@model EmployeeDirectory.Models.Employee
+@{
+    ViewData["Title"] = "Add Employee";
+    ViewData["AllowStatusEdit"] = true;
+}
+
+<h1 class="page-title" data-testid="page-title">Add Employee</h1>
+
+<div class="card p-4" style="max-width: 800px;">
+    <form asp-action="Create" method="post" data-testid="employee-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger" data-testid="validation-summary"></div>
+
+        <partial name="_EmployeeFormFields" model="Model" />
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success" data-testid="save-button">Save</button>
+            <a asp-action="Index" class="btn btn-outline-secondary" data-testid="cancel-button">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

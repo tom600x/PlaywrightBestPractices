@@ -1,0 +1,56 @@
+@model EmployeeDirectory.Models.Employee
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" data-testid="input-firstname" />
+        <span asp-validation-for="FirstName" class="text-danger" data-testid="error-firstname"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" data-testid="input-lastname" />
+        <span asp-validation-for="LastName" class="text-danger" data-testid="error-lastname"></span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" data-testid="input-email" />
+        <span asp-validation-for="Email" class="text-danger" data-testid="error-email"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" data-testid="input-title" />
+        <span asp-validation-for="Title" class="text-danger" data-testid="error-title"></span>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label asp-for="Department" class="form-label"></label>
+        <select asp-for="Department" class="form-select" data-testid="input-department"
+                asp-items="Html.GetEnumSelectList<EmployeeDirectory.Models.Department>()"></select>
+        <span asp-validation-for="Department" class="text-danger" data-testid="error-department"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Status" class="form-label"></label>
+        @if (ViewData["AllowStatusEdit"] as bool? == true)
+        {
+            <select asp-for="Status" class="form-select" data-testid="input-status"
+                    asp-items="Html.GetEnumSelectList<EmployeeDirectory.Models.EmployeeStatus>()"></select>
+        }
+        else
+        {
+            <input type="hidden" asp-for="Status" />
+            <input class="form-control" value="@Model.Status" readonly
+                   data-testid="input-status-readonly" />
+        }
+        <span asp-validation-for="Status" class="text-danger" data-testid="error-status"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="HireDate" class="form-label"></label>
+        <input asp-for="HireDate" class="form-control" type="date" data-testid="input-hiredate" />
+        <span asp-validation-for="HireDate" class="text-danger" data-testid="error-hiredate"></span>
+    </div>
+</div>

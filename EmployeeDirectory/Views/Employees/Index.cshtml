@@ -1,0 +1,119 @@
+@model EmployeeDirectory.Models.EmployeeSearchViewModel
+@{
+    ViewData["Title"] = "Employee Search";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="page-title" data-testid="page-title">Employee Directory</h1>
+    <div>
+        <a asp-action="Create" class="btn btn-success me-2" data-testid="add-employee-button">
+            + Add Employee
+        </a>
+        <form asp-action="Reset" method="post" class="d-inline" data-testid="reset-data-form"
+              onsubmit="return confirm('Reset all data back to the original sample set? Any changes you made will be lost.');">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-outline-secondary" data-testid="reset-data-button">
+                Reset Sample Data
+            </button>
+        </form>
+    </div>
+</div>
+
+@if (TempData["StatusMessage"] is string statusMessage)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert" data-testid="status-message">
+        @statusMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card search-card p-3 mb-4" data-testid="search-panel">
+    <form asp-action="Index" method="get" id="searchForm" data-testid="search-form">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="searchTerm" class="form-label">Search</label>
+                <input type="text" class="form-control" id="searchTerm" name="searchTerm"
+                       placeholder="Name, email, or title..."
+                       value="@Model.SearchTerm" data-testid="search-input" />
+            </div>
+            <div class="col-md-3">
+                <label for="department" class="form-label">Department</label>
+                <select class="form-select" id="department" name="department" data-testid="filter-department">
+                    <option value="">All Departments</option>
+                    @foreach (var dept in Enum.GetValues<EmployeeDirectory.Models.Department>())
+                    {
+                        <option value="@dept" selected="@(Model.Department == dept)">@dept</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="status" class="form-label">Status</label>
+                <select class="form-select" id="status" name="status" data-testid="filter-status">
+                    <option value="">All Statuses</option>
+                    @foreach (var st in Enum.GetValues<EmployeeDirectory.Models.EmployeeStatus>())
+                    {
+                        <option value="@st" selected="@(Model.Status == st)">@st</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-fill" data-testid="search-button">Search</button>
+                <a asp-action="Index" class="btn btn-outline-secondary" data-testid="clear-filters">Clear</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<p class="text-muted" data-testid="result-count">
+    @Model.TotalCount employee@(Model.TotalCount == 1 ? "" : "s") found
+</p>
+
+@if (Model.Results.Count == 0)
+{
+    <div class="alert alert-warning" data-testid="no-results">
+        No employees match your search criteria.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-hover table-striped bg-white align-middle" data-testid="employee-table">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Title</th>
+                    <th>Hire Date</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var employee in Model.Results)
+                {
+                    <tr data-testid="employee-row-@employee.Id">
+                        <td data-testid="employee-name-@employee.Id">@employee.FullName</td>
+                        <td data-testid="employee-email-@employee.Id">@employee.Email</td>
+                        <td data-testid="employee-department-@employee.Id">@employee.Department</td>
+                        <td data-testid="employee-title-@employee.Id">@employee.Title</td>
+                        <td data-testid="employee-hiredate-@employee.Id">@employee.HireDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <span class="badge status-badge status-@employee.Status" data-testid="employee-status-@employee.Id">
+                                @employee.Status
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Details" asp-route-id="@employee.Id" class="btn btn-sm btn-outline-info"
+                               data-testid="details-link-@employee.Id">Details</a>
+                            <a asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-sm btn-outline-primary"
+                               data-testid="edit-link-@employee.Id">Edit</a>
+                            <a asp-action="Delete" asp-route-id="@employee.Id" class="btn btn-sm btn-outline-danger"
+                               data-testid="delete-link-@employee.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

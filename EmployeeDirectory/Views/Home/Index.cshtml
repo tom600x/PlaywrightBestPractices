@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "About";
+}
+
+<h1 class="page-title" data-testid="page-title">About This Demo</h1>
+
+<div class="card p-4" style="max-width: 800px;">
+    <p>
+        This is a sample ASP.NET Core MVC application: an <strong>Employee Directory</strong>
+        that demonstrates a typical create/search/update/delete (CRUD) workflow backed by
+        temporary, in-memory storage.
+    </p>
+    <ul>
+        <li>Data lives only for the lifetime of the running process (a simple in-memory repository).</li>
+        <li>Use <strong>Reset Sample Data</strong> on the search page to restore the original seed records at any time.</li>
+        <li>Every key page element carries a stable <code>data-testid</code> attribute so automation
+            test tools (e.g. Playwright, Selenium) can reliably locate elements regardless of styling changes.</li>
+    </ul>
+    <a asp-controller="Employees" asp-action="Index" class="btn btn-primary" data-testid="go-to-search">
+        Go to Employee Search
+    </a>
+</div>
